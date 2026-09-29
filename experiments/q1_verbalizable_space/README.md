@@ -1,17 +1,36 @@
-# Q1 — When does the verbalizable space form during training?
+# Q1 — When does the workspace form during training?
 
-Finished language models hold a shared space of content they are disposed to say, which the Jacobian
-lens reads (Anthropic, 2026). This experiment asks when that space appears across training, at which
-layers, and how suddenly, on Pythia checkpoints.
+Finished language models hold a small, privileged set of verbalizable representations, read by the
+Jacobian lens, that behaves like a global workspace (Gurnee et al., "Verbalizable Representations Form
+a Global Workspace in Language Models", Transformer Circuits, 2026). The paper finds it in base models
+already, and leaves open "how much earlier in pretraining it emerges, whether it appears gradually or
+abruptly, or how it scales with model size" (its section 9.1). This experiment asks exactly that, on
+Pythia checkpoints.
 
-**Measure.** At each checkpoint, the lens is fitted on 100 windows and evaluated on 100 others. Per
-layer: how often the lens top-1 token differs from the model's own top-1 next token (`jlens_error`),
-next to the same measure without transport (`logit_lens_error`, the baseline), and the loss. Then the
-onset (when a layer's error has made half its drop) and the sharpness (1 = one sudden drop).
+**Measures.** At each checkpoint the lens is fitted on 100 windows (Jacobian of the penultimate
+residual, the paper's default) and evaluated on 100 others. Per layer, the paper's four workspace
+signatures (section 4.1):
 
-**First check.** On the final checkpoint, the J-lens error must be well below the logit-lens error in
-the middle layers. If not, the finished-model result does not hold on Pythia, and that is the first
-result.
+| Signature | Measure | At the workspace onset |
+|---|---|---|
+| dimension | `jlens_dimension` | the J-lens vectors fan out from a low-dimensional subspace |
+| kurtosis | `lens_kurtosis` (J-lens and logit lens) | readouts become peaked on a few tokens |
+| persistence | `lens_persistence` | the top readout repeats across positions of the same text, more than across texts |
+| CKA | `jlens_cka` | layers group into early / workspace / motor blocks |
+
+Plus, for the late "motor" regime, `jlens_error` and `logit_lens_error` (disagreement with the
+model's next token: the J-lens is not built to predict it, so these are not workspace measures), and
+the loss. Then per layer: the onset (step at which a signature has made half its rise) and the
+sharpness (1 = one sudden jump).
+
+**First check.** On the final checkpoint, the signatures must show the paper's layer structure: low
+dimension and kurtosis in the first third of the layers, a middle block with high persistence, a
+separate late block in the CKA. If not, the finished-model result does not hold on this Pythia size,
+and that is the first result.
+
+**Size.** Pythia 70m has 6 layers; the workspace starts about a third of the way in, and the paper
+does not know whether small models have one. Run 70m to check the pipeline and as the small-model
+point; the answer needs 410m (and 1.4b if it fits).
 
 ## Run it (one GPU)
 
@@ -34,7 +53,7 @@ uv run python experiments/q1_verbalizable_space/run.py --texts texts.txt --size 
 
 Results are cached by content in `runs/q1/store`: if the run stops, run the same command again and
 it resumes. The summary is written to `runs/q1/q1_pythia-70m.json` (config, study key, code version,
-curves, onsets).
+every signature per checkpoint and layer, onsets).
 
 ## Cost (estimates, to be replaced by measurements)
 
