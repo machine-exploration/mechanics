@@ -4,8 +4,7 @@ version = "0.0.0"
 description = "Machine Exploration's research program: how training creates computation. Experiments built on explorers."
 requires-python = ">=3.11"
 dependencies = [
-  "explorers-core[torch] @ git+https://github.com/machine-exploration/explorers#subdirectory=packages/core",
-  "explorers-learning @ git+https://github.com/machine-exploration/explorers#subdirectory=packages/learning",
+  "explorers[torch] @ git+https://github.com/machine-exploration/explorers",
 ]
 
 [tool.uv]

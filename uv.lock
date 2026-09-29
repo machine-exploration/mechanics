@@ -140,9 +140,9 @@ nvtx = [
 ]
 
 [[package]]
-name = "explorers-core"
-version = "0.1.0.dev0"
-source = { git = "https://github.com/machine-exploration/explorers?subdirectory=packages%2Fcore#0bfa71918b6645f34e6a2e3f5f7438279218c830" }
+name = "explorers"
+version = "0.2.0.dev0"
+source = { git = "https://github.com/machine-exploration/explorers#ffe2b74f2d9814317c7dc62624cef1a42923976b" }
 dependencies = [
     { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "numpy", version = "2.5.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
@@ -153,16 +153,6 @@ dependencies = [
 torch = [
     { name = "torch" },
     { name = "transformers" },
-]
-
-[[package]]
-name = "explorers-learning"
-version = "0.1.0.dev0"
-source = { git = "https://github.com/machine-exploration/explorers?subdirectory=packages%2Flearning#0bfa71918b6645f34e6a2e3f5f7438279218c830" }
-dependencies = [
-    { name = "explorers-core" },
-    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
-    { name = "numpy", version = "2.5.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
 ]
 
 [[package]]
@@ -385,15 +375,11 @@ name = "mechanics"
 version = "0.0.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "explorers-core", extra = ["torch"] },
-    { name = "explorers-learning" },
+    { name = "explorers", extra = ["torch"] },
 ]
 
 [package.metadata]
-requires-dist = [
-    { name = "explorers-core", extras = ["torch"], git = "https://github.com/machine-exploration/explorers?subdirectory=packages%2Fcore" },
-    { name = "explorers-learning", git = "https://github.com/machine-exploration/explorers?subdirectory=packages%2Flearning" },
-]
+requires-dist = [{ name = "explorers", extras = ["torch"], git = "https://github.com/machine-exploration/explorers" }]
 
 [[package]]
 name = "mpmath"
