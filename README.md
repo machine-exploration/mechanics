@@ -11,7 +11,7 @@ Part of [Machine Exploration](https://github.com/machine-exploration/public): se
 | Folder | Question | Status |
 |---|---|---|
 | [`experiments/q0_quanta`](experiments/q0_quanta) | When, and in what order, does a model learn what it learns? | On a toy with tasks of Zipf frequencies: frequent tasks are learned first (rank correlation −0.74), each suddenly (median sharpness 0.74). Pythia next. |
-| `experiments/q1_verbalizable_space` | When does the space read by the Jacobian lens form during training? | Next. The lens is in `explorers.core` ([docs](https://github.com/machine-exploration/explorers/blob/main/docs/jlens.md)). |
+| [`experiments/q1_verbalizable_space`](experiments/q1_verbalizable_space) | When does the space read by the Jacobian lens form during training? | Ready to run on one GPU; the dry run passes. |
 
 Each experiment ships with the run that reproduces it: config, seed, data order, model version and code version. Negative results are published too.
 
