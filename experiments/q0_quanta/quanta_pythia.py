@@ -15,10 +15,8 @@ from pathlib import Path
 
 import numpy as np
 
-from explorers.core import analysis, observe
-from explorers.core.data import Examples
-from explorers.core.engine import over
-from explorers.learning import from_checkpoints, pythia
+import explorers as ex
+from explorers import analysis, measures
 
 p = argparse.ArgumentParser()
 p.add_argument("texts", type=Path)
@@ -33,19 +31,21 @@ args = p.parse_args()
 
 from transformers import AutoTokenizer  # noqa: E402
 
-checkpoints = pythia(args.size, n=args.checkpoints)
-tok = AutoTokenizer.from_pretrained(checkpoints[-1].model, revision=checkpoints[-1].revision)
+name = f"EleutherAI/pythia-{args.size}"
+checkpoints = ex.checkpoints(name, steps=ex.pick(ex.pythia_steps(), args.checkpoints), device=args.device,
+                             dtype=args.dtype)
+tok = AutoTokenizer.from_pretrained(name)
 texts = [line for line in args.texts.read_text(encoding="utf-8").splitlines() if line.strip()]
-examples = Examples.from_texts(texts, tok, seq_len=args.seq_len, name=args.texts.stem,
+examples = ex.Examples.from_texts(texts, tok, seq_len=args.seq_len, name=args.texts.stem,
                                max_examples=args.max_examples)
 
 # Data-centred metadata: how often each window's tokens occur in this sample.
 counts = Counter(examples.tokens.ravel().tolist())
 freq = np.vectorize(counts.__getitem__)(examples.tokens).astype(float)
 
-trajectory = from_checkpoints(checkpoints, device=args.device, dtype=args.dtype, coords={"size": args.size})
-ds = over(trajectory, [observe.token_loss, observe.loss, observe.stable_rank], examples,
-          store="runs/store", device=args.device)
+ds = (ex.Study(checkpoints, examples)
+      .measure(measures.token_loss, measures.loss, measures.stable_rank)
+      .compute(store="runs/store", verbose=True))
 ds = ds.assign(target_frequency=(("example", "position"), freq))
 
 samples = ds.token_loss.isel(position=slice(1, None)).stack(sample=("example", "position"))

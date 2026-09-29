@@ -19,9 +19,8 @@ from pathlib import Path
 import numpy as np
 
 import explorers as ex
-from explorers.core import analysis, observe
-from explorers.core.data import Examples
-from explorers.learning import pick, pythia_steps
+from explorers import analysis, measures
+from explorers.data import Examples
 
 
 def examples_from_texts(path: Path, tokenizer, seq_len: int, n_fit: int, n_eval: int) -> Examples:
@@ -86,7 +85,7 @@ def main(argv=None):
         n_layers, d_model, skip = cfg.num_hidden_layers, cfg.hidden_size, args.skip_first
         examples = examples_from_texts(args.texts, AutoTokenizer.from_pretrained(name), args.seq_len,
                                        args.n_fit, args.n_eval)
-        models = ex.checkpoints(name, steps=pick(pythia_steps(), args.checkpoints), device=args.device,
+        models = ex.checkpoints(name, steps=ex.pick(ex.pythia_steps(), args.checkpoints), device=args.device,
                                 dtype=args.dtype)
     layers = list(range(1, n_layers))
     print(f"{name}: {len(models)} checkpoints, layers {layers[0]}..{layers[-1]}, d_model {d_model}")
@@ -94,15 +93,16 @@ def main(argv=None):
                                 args.batch_size, args.dim_batch))
 
     study = (ex.Study(models, examples, batch_size=args.batch_size, dim_batch=args.dim_batch)
-             .observe(observe.jlens_error(layers, skip_first=skip), observe.logit_lens_error(layers, skip_first=skip),
-                      observe.loss))
+             .measure(measures.jlens_error(layers, skip_first=skip), measures.logit_lens_error(layers, skip_first=skip),
+                      measures.loss))
     t0 = time.time()
     ds = study.compute(store=args.store, verbose=True)
     elapsed = time.time() - t0
 
-    steps = [int(s.removeprefix("step")) if isinstance(s, str) else int(s) for s in
-             (m.step if hasattr(m, "step") and m.step is not None else m.revision for m in models)]
-    curves = ds.rename(model="step").assign_coords(step=steps)
+    if "model" in ds.dims:                                  # dry run: Models without steps
+        ds = ds.rename(model="step").assign_coords(step=[int(m.revision.removeprefix("step")) for m in models])
+    steps = [int(s) for s in ds.step.values]
+    curves = ds
     on_j = analysis.onsets(curves.jlens_error, min_drop=0.05)
     on_l = analysis.onsets(curves.logit_lens_error, min_drop=0.05)
 

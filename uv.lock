@@ -141,8 +141,8 @@ nvtx = [
 
 [[package]]
 name = "explorers"
-version = "0.2.0.dev0"
-source = { git = "https://github.com/machine-exploration/explorers#65ceb5c84327d4387fcf2a645b484eb0176070ef" }
+version = "0.3.0.dev0"
+source = { git = "https://github.com/machine-exploration/explorers#1a068dd15768dd062f046ada0700b69cbd2f6470" }
 dependencies = [
     { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "numpy", version = "2.5.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
