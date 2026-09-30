@@ -12,7 +12,7 @@ Part of [Machine Exploration](https://github.com/machine-exploration/public): se
 |---|---|---|
 | [`experiments/q0_quanta`](experiments/q0_quanta) | When, and in what order, does a model learn what it learns? | On a toy with tasks of Zipf frequencies: frequent tasks are learned first (rank correlation −0.74), each suddenly (median sharpness 0.74). Pythia next. |
 | [`experiments/q1_verbalizable_space`](experiments/q1_verbalizable_space) | When does the space read by the Jacobian lens form during pretraining? | Ready to run on one GPU; the dry run passes. Later (pretraining). |
-| `experiments/o2_planted_concept` (planned) | A concept planted by a prime-rl LoRA fine-tune: which white-box methods (J-lens, probe, logit lens) see it inside before behaviour, at what cost? | Next (roadmap O2). |
+| `experiments/o2_monitor_arena` (planned) | The Monitor Arena, first track: on ImpossibleBench rollouts, how much do a difference-of-means probe, a Jacobian-lens monitor built from words and the logit lens catch, at what cost? Checked first on a planted concept. | Next (roadmap O2). |
 
 Each experiment ships with the run that reproduces it: config, seed, data order, model version and code version. Negative results are published too.
 
