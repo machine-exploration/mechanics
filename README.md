@@ -4,7 +4,7 @@
 
 It is built on [`explorers`](https://github.com/machine-exploration/explorers), the open-source library. This repository holds research only: experiments, datasets and papers. Library code goes to `explorers`.
 
-Part of [Machine Exploration](https://github.com/machine-exploration/public): see the [vision](https://github.com/machine-exploration/public#readme) and the [roadmap](https://github.com/machine-exploration/public/blob/main/ROADMAP.md). The first studies run on evals and post-training runs; pretraining studies (q0, q1) come later on the same engine.
+Part of [Machine Exploration](https://github.com/machine-exploration/public): see the [vision](https://github.com/machine-exploration/public#readme) and the [roadmap](https://github.com/machine-exploration/public/blob/main/ROADMAP.md). Its focus is pretraining: discovering the representations and probe directions that training creates (q0, q1). It is not the current priority: the Monitor Arena comes first, and lives in `explorers` and the [`verifiers` fork](https://github.com/machine-exploration/verifiers/tree/main/environments/impossible_code).
 
 ## Experiments
 
@@ -12,7 +12,6 @@ Part of [Machine Exploration](https://github.com/machine-exploration/public): se
 |---|---|---|
 | [`experiments/q0_quanta`](experiments/q0_quanta) | When, and in what order, does a model learn what it learns? | On a toy with tasks of Zipf frequencies: frequent tasks are learned first (rank correlation −0.74), each suddenly (median sharpness 0.74). Pythia next. |
 | [`experiments/q1_verbalizable_space`](experiments/q1_verbalizable_space) | When does the space read by the Jacobian lens form during pretraining? | Ready to run on one GPU; the dry run passes. Later (pretraining). |
-| `experiments/o2_monitor_arena` (planned) | The Monitor Arena, first track: on ImpossibleBench rollouts, how much do a difference-of-means probe, a Jacobian-lens monitor built from words and the logit lens catch, at what cost? Checked first on a planted concept. | Next (roadmap O2). |
 
 Each experiment ships with the run that reproduces it: config, seed, data order, model version and code version. Negative results are published too.
 
