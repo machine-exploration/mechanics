@@ -2,7 +2,7 @@
 
 **Mechanics** is Machine Exploration's science: how training creates the computation inside a model. It joins learning mechanics (training as a dynamical system: loss curves, scaling, phase transitions, solvable models) with mechanistic interpretability (what training produces: representations, circuits, algorithms). The question that joins them: how do training dynamics create mechanisms, and how do mechanisms add up to the behaviour of training as a whole?
 
-It is built on [`explorers`](https://github.com/machine-exploration/explorers), the instrument: experiments here call its API. This repository holds research only: experiments, organisms (models trained on designed data), figures and papers. Library code goes to `explorers`; environments go to the [`verifiers` fork](https://github.com/machine-exploration/verifiers/tree/main/environments).
+It runs in [`explorers`](https://github.com/machine-exploration/explorers), the lab: experiments here call its API. This repository holds research only: experiments, organisms (models trained on designed data), figures and papers. Library code goes to `explorers`; environments go to the [`verifiers` fork](https://github.com/machine-exploration/verifiers/tree/main/environments).
 
 Part of [Machine Exploration](https://github.com/machine-exploration/public): see the [vision](https://github.com/machine-exploration/public#readme) and the [roadmap](https://github.com/machine-exploration/public/blob/main/ROADMAP.md).
 
