@@ -2,7 +2,7 @@
 
 **Mechanics** is Machine Exploration's science: how training creates the computation inside a model. It joins learning mechanics (training as a dynamical system: loss curves, scaling, phase transitions, solvable models) with mechanistic interpretability (what training produces: representations, circuits, algorithms). The question that joins them: how do training dynamics create mechanisms, and how do mechanisms add up to the behaviour of training as a whole?
 
-It is built on [`explorers`](https://github.com/machine-exploration/explorers), the instrument. This repository holds research only: experiments, organisms (models trained on designed data), figures and papers. Library code goes to `explorers`; environments go to the [`verifiers` fork](https://github.com/machine-exploration/verifiers/tree/main/environments).
+It is built on [`explorers`](https://github.com/machine-exploration/explorers), the instrument: experiments here call its API. This repository holds research only: experiments, organisms (models trained on designed data), figures and papers. Library code goes to `explorers`; environments go to the [`verifiers` fork](https://github.com/machine-exploration/verifiers/tree/main/environments).
 
 Part of [Machine Exploration](https://github.com/machine-exploration/public): see the [vision](https://github.com/machine-exploration/public#readme) and the [roadmap](https://github.com/machine-exploration/public/blob/main/ROADMAP.md).
 
@@ -23,10 +23,10 @@ On every rung: macroscopic quantities (per-skill loss and accuracy over steps), 
 
 | Experiment | Question | Rung | Status |
 |---|---|---|---|
+| [`experiments/glp-activation`](experiments/glp-activation) | A generative model of activations ([Luo et al., 2026](https://arxiv.org/abs/2602.06964)) fitted at every checkpoint of a run: when does the distribution of internal states acquire its structure, and how does that relate to when skills are learned? | 1–2 | First. Stage 1 reproduces the paper's released Llama 1B priors; then across training. Needs the explorers training primitives (O1). |
 | [`experiments/q0_quanta`](experiments/q0_quanta) | When, and in what order, does a model learn what it learns? | 1 | On a toy with 16 tasks of Zipf frequencies: frequent tasks are learned first (rank correlation −0.74), each suddenly (median sharpness 0.74). |
-| `q2_onset_law` | Does solvable theory (deep linear networks) predict when each skill is learned: onset inversely proportional to frequency, with a logarithmic dependence on initialisation scale? 3 sizes × 5 seeds × 2 initialisation scales, shuffled-frequency control. Then: is the representation readable before the skill is used, and is the order the same across seeds? | 1 | Next: q0 extended. Needs the training primitives of `explorers` (O1). |
+| `q2_onset_law` | Does solvable theory (deep linear networks) predict when each skill is learned: onset inversely proportional to frequency, with a logarithmic dependence on initialisation scale? 3 sizes × 5 seeds × 2 initialisation scales, shuffled-frequency control. Then: is the representation readable before the skill is used, and is the order the same across seeds? | 1 | Next after glp-activation: q0 extended. Needs the training primitives of `explorers` (O1). |
 | [`experiments/q1_verbalizable_space`](experiments/q1_verbalizable_space) | When does the space read by the Jacobian lens form during pretraining? | 2 | Ready to run on one GPU; the dry run passes. |
-| The prior across training | A generative meta-model of activations ([Luo et al., 2026](https://arxiv.org/abs/2602.06964)) fitted at every checkpoint: when does the distribution of internal states acquire structure, relative to skill onsets? | 1–2 | Planned; first reproduce their released Llama 1B priors. |
 | Watching a model learn to cheat | During RL on [`impossible_code`](https://github.com/machine-exploration/verifiers/tree/main/environments/impossible_code), does the representation of hacking form before the hack rate rises? Does RL build a new mechanism or route an existing concept? | 4 | Planned. The environment and episode replay are built; the RL run is not. |
 
 Each experiment ships with the run that reproduces it: config, seed, data order, model version and code version. Negative results are published too.
