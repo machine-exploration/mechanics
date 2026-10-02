@@ -22,23 +22,28 @@ Controls: an organism trained on shuffled-frequency data; priors fitted on diffe
 
 ## How it runs
 
-The experiment calls the explorers API; no library code lives here. It uses `@ex.sweep` (built: a grid of runs keyed by content, checked on the CPU, sent to GPU workers) and needs `stream` (one model's activations fed to the prior's training loop) and the Modal backend (explorers roadmap O1).
+The experiment calls the explorers API; no library code lives here. It is a job (`train.py:main`) sent by a `Client` to a `Runtime`: first `LocalRuntime` on the CPU with a tiny model (built; checks the contract), then GPU workers. It needs `stream` (one model's activations fed to the prior's training loop) and the Modal runtime (explorers roadmap O1).
 
 ```python
 import explorers as ex
 
-@ex.sweep(step=STEPS, layer=[4, 8, 12], seed=range(3))
-def prior(check, step, layer, seed):
-    m = ex.open(RUN, revision=step)
-    acts = ex.stream(m, env, reads=f"residual[{layer}]", tokens=10_000 if check else TOKENS)
+# train.py: the job, run on any runtime
+def main(model, step, layer, seed, tokens):
+    m = ex.open(model, revision=step)
+    acts = ex.stream(m, env, reads=f"residual[{layer}]", tokens=tokens)
     glp = ex.model(ex.configs.mlp_denoiser(depth=6, d=m.d_model), seed=seed)
     for x in acts:
         glp.forward_backward(x, loss=ex.losses.flow_matching)
         glp.optim_step()
     return {"loss": glp.loss, "probe": sparse_probing(glp)}
 
-prior.check()                             # one point, on the CPU, on a sliver of the data
-results = prior.run(on=ex.Modal())        # every checkpoint × layer × seed on GPU workers
+# from the client
+ex.Client(ex.LocalRuntime()).run("experiments/glp-activation/train.py:main",
+                                 model="tiny", step=0, layer=1, seed=0, tokens=10_000)   # CPU: contract check
+client = ex.Client(ModalRuntime())
+jobs = [client.submit("experiments/glp-activation/train.py:main", ex.Resources(gpu="A100"),
+                      model=RUN, step=t, layer=l, seed=s, tokens=TOKENS)
+        for t in STEPS for l in (4, 8, 12) for s in range(3)]
 ```
 
 Illustrative until O1 is built. Cost reference from the paper's repository: a billion activations take about 5.6 days on two A100 80 GB GPUs (one caching activations, one training); most of its scripts fit in 24 GB. Stage 2 uses far fewer tokens per checkpoint; the budget per checkpoint is fixed after stage 1.
