@@ -8,7 +8,7 @@ They fit the prior on a finished model. This experiment fits it along training: 
 
 | Stage | What | Done when |
 |---|---|---|
-| 1. Reproduce | Fit priors on Llama 3.2 1B activations with the paper's recipe, first on their 1M-activation quickstart, then at scale; compare with their released checkpoints (`glp-llama1b-d3`, `-d6`, `-d12`, `-d24`) | Their probing scores matched within a stated tolerance, on our pipeline |
+| 1. Reproduce | Fit priors on the activations of their Llama 1B model with the paper's recipe, first on their 1M-activation quickstart, then at scale; compare with their released checkpoints (`glp-llama1b-d3`, `-d6`, `-d12`, `-d24`) | Their probing scores matched within a stated tolerance, on our pipeline |
 | 2. Across training | Fit a prior on the activations of every checkpoint of a run: a small organism trained on designed data (planted skills at controlled frequencies), then Pythia | Prior loss and meta-neuron probing scores over training steps, per layer, across seeds |
 | 3. Against skills | Compare the onsets of structure in the prior with the onsets of the planted skills (accuracy per skill over steps) | The relation measured, whatever it is |
 
