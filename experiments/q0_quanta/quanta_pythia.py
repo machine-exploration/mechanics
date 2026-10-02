@@ -43,7 +43,7 @@ examples = ex.Examples.from_texts(texts, tok, seq_len=args.seq_len, name=args.te
 counts = Counter(examples.tokens.ravel().tolist())
 freq = np.vectorize(counts.__getitem__)(examples.tokens).astype(float)
 
-ds = (ex.Study(checkpoints, examples)
+ds = (ex.Experiment(checkpoints, examples)
       .measure(measures.token_loss, measures.loss, measures.stable_rank)
       .compute(store="runs/store", verbose=True))
 ds = ds.assign(target_frequency=(("example", "position"), freq))

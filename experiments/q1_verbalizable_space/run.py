@@ -102,7 +102,7 @@ def main(argv=None):
                                 args.batch_size, args.dim_batch))
 
     t, k = args.target, skip
-    study = (ex.Study(models, examples, batch_size=args.batch_size, dim_batch=args.dim_batch)
+    experiment = (ex.Experiment(models, examples, batch_size=args.batch_size, dim_batch=args.dim_batch)
              .measure(measures.jlens_dimension(layers, k, t), measures.jlens_cka(layers, k, t),
                       measures.lens_kurtosis(layers, k, t), measures.lens_kurtosis(layers, k, lens="logit"),
                       measures.lens_persistence(layers, k, t, offsets=OFFSETS),
@@ -110,7 +110,7 @@ def main(argv=None):
                       measures.jlens_error(layers, k, t), measures.logit_lens_error(layers, k),
                       measures.loss))
     t0 = time.time()
-    ds = study.compute(store=args.store, verbose=True)
+    ds = experiment.compute(store=args.store, verbose=True)
     elapsed = time.time() - t0
 
     if "model" in ds.dims:                                  # dry run: Models without steps
@@ -145,7 +145,7 @@ def main(argv=None):
     args.out.mkdir(parents=True, exist_ok=True)
     result = {
         "question": "Q1: when does the workspace form during training?",
-        "model": name, "study_key": study.key(), "explorers": ex.__version__, "explorers_source": source,
+        "model": name, "experiment_key": experiment.key(), "explorers": ex.__version__, "explorers_source": source,
         "config": {k: (str(v) if isinstance(v, Path) else v) for k, v in vars(args).items()},
         "examples": {"fingerprint": examples.fingerprint, "n": len(examples)},
         "steps": steps, "layers": layers, "offsets": list(OFFSETS), "seconds": elapsed,

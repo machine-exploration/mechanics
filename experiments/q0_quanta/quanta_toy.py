@@ -8,7 +8,7 @@ from explorers import analysis, measures, toy
 
 task = toy.MultitaskLookup(n_tasks=16, n_symbols=16, alpha=1.3)
 trajectory = toy.train(task, steps=1500, every=50)
-ds = (ex.Study(trajectory, task.examples())
+ds = (ex.Experiment(trajectory, task.examples())
       .measure(measures.example_loss, measures.stable_rank, measures.update_norm)
       .compute(store="runs/store"))
 

@@ -52,7 +52,7 @@ uv run python experiments/q1_verbalizable_space/run.py --texts texts.txt --size 
 ```
 
 Results are cached by content in `runs/q1/store`: if the run stops, run the same command again and
-it resumes. The summary is written to `runs/q1/q1_pythia-70m.json` (config, study key, code version,
+it resumes. The summary is written to `runs/q1/q1_pythia-70m.json` (config, experiment key, code version,
 every signature per checkpoint and layer, onsets).
 
 ## Cost (estimates, to be replaced by measurements)
@@ -69,5 +69,5 @@ cache).
 
 ## Done when
 
-A result note in `machine-exploration/public`, with this command, the study key and the code version,
+A result note in `machine-exploration/public`, with this command, the experiment key and the code version,
 positive or negative.
