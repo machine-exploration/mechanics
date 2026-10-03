@@ -22,7 +22,7 @@ Controls: an organism trained on shuffled-frequency data; priors fitted on diffe
 
 ## How it runs
 
-The experiment calls the explorers API; no library code lives here. It is a job (`train.py:main`) sent by a `Client` to a `Runtime`: first `LocalRuntime` on the CPU with a tiny model (built; checks the contract), then GPU workers. It needs `stream` (one model's activations fed to the prior's training loop) and the Modal runtime (explorers roadmap O1).
+The experiment calls the explorers API; no library code lives here. It is a job (`train.py:main`) sent by a `Client` to a `Runtime`: first `LocalRuntime` on the CPU with a tiny model (built; checks the contract), then GPU workers. It needs `stream` (one model's activations fed to the prior's training loop) and the Modal runtime (roadmap O3).
 
 ```python
 import explorers as ex
@@ -46,10 +46,10 @@ jobs = [client.submit("experiments/glp-activation/train.py:main", ex.Resources(g
         for t in STEPS for l in (4, 8, 12) for s in range(3)]
 ```
 
-Illustrative until O1 is built. Cost reference from the paper's repository: a billion activations take about 5.6 days on two A100 80 GB GPUs (one caching activations, one training); most of its scripts fit in 24 GB. Stage 2 uses far fewer tokens per checkpoint; the budget per checkpoint is fixed after stage 1.
+Illustrative until roadmap O3 is built. Cost reference from the paper's repository: a billion activations take about 5.6 days on two A100 80 GB GPUs (one caching activations, one training); most of its scripts fit in 24 GB. Stage 2 uses far fewer tokens per checkpoint; the budget per checkpoint is fixed after stage 1.
 
 ## Status
 
-Planned. Blocked on the explorers training primitives (O1). Stage 1 can start with the paper's own code to pin down the target numbers.
+Planned, after Collective Adaptive Stress Testing. Blocked on the explorers training primitives (roadmap O3). Stage 1 can start with the paper's own code to pin down the target numbers.
 
 Each result ships with the run that reproduces it: config, seed, data order, model version and code version. Negative results are published too.
